@@ -1,6 +1,6 @@
-// Minimal service worker for offline support
+// Minimal service worker for offline support - caches shell files
 const CACHE = 'minesweeper-v1';
-const FILES = ['.','index.html','styles.css','app.js','manifest.json'];
+const FILES = ['.','index.html','styles.css','app.js','manifest.json','icon-192.png','icon-512.png'];
 self.addEventListener('install', evt=>{
   evt.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES)));
   self.skipWaiting();

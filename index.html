@@ -12,7 +12,7 @@
     <header class="bar">
       <div class="mines-counter" id="minesCounter">000</div>
       <div class="controls">
-        <div class="mode-select" id="levelSelect">
+        <div class="mode-select" id="levelSelectDesktop">
           <button data-level="beginner" class="level-btn active">Beginner</button>
           <button data-level="intermediate" class="level-btn">Player</button>
           <button data-level="expert" class="level-btn">Pro</button>
@@ -28,11 +28,22 @@
 
     <main>
       <div id="boardWrap">
-        <div id="board"></div>
+        <div id="board" aria-hidden="false"></div>
       </div>
     </main>
 
     <!-- Overlays -->
+    <div id="levelOverlay" class="overlay">
+      <div class="overlay-card">
+        <h2>Select Level</h2>
+        <div class="level-grid">
+          <button class="level-start" data-level="beginner">Beginner<br><small>9×9, 10 mines</small></button>
+          <button class="level-start" data-level="intermediate">Player<br><small>16×16, 40 mines</small></button>
+          <button class="level-start" data-level="expert">Pro<br><small>16×30, 99 mines</small></button>
+        </div>
+      </div>
+    </div>
+
     <div id="pauseOverlay" class="overlay hidden">
       <div class="overlay-card">
         <h2>Paused</h2>
@@ -43,13 +54,19 @@
     <div id="winOverlay" class="overlay hidden">
       <div class="overlay-card">
         <h2 id="winMsg">You solved it!</h2>
-        <p id="winTime">Time taken to solve 000</p>
+        <p id="winTime">Time taken to solve 0:00</p>
         <button id="newGameBtn">New Game</button>
       </div>
     </div>
 
     <footer class="credits">APP-BY-JEET</footer>
   </div>
+
   <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(()=>console.log('SW reg failed'));
+    }
+  </script>
 </body>
 </html>
