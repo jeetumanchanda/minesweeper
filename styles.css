@@ -20,42 +20,23 @@ html, body { height:100%; margin:0; background:var(--bg); }
   border-radius:6px;
 }
 
+/* Mine counter and Timer */
 .mines-counter, .timer {
-  width:180px; /* match button width */
+  width:140px; 
   text-align:center;
   font-family:monospace; 
   background:#111; 
-  padding:8px 0; 
+  padding:6px 0; 
   border-radius:6px; 
   color:#ff6666; 
   font-weight:700; 
-  font-size:18px;
+  font-size:16px;
 }
 
-.controls {
-  display:flex; 
-  align-items:center; 
-  justify-content:space-between; 
-  gap:8px; 
-  flex-wrap:wrap; 
-  padding:4px 8px;
-}
-
-.back-btn, .pause-btn {
-  padding:6px 12px; 
-  border-radius:6px; 
-  border:none; 
-  font-size:16px; 
-  cursor:pointer; 
-  background:#eee;
-}
-
-.back-btn { margin-right:8px; }
-.pause-btn { margin-left:8px; }
-
+/* Controls */
 .flag-btn, .hint-btn {
   display:block;
-  width:180px; 
+  width:140px; /* reduced width */
   padding:10px 0;
   margin:4px auto; 
   border-radius:8px; 
@@ -75,15 +56,27 @@ html, body { height:100%; margin:0; background:var(--bg); }
 
 .hint-btn { margin-top:4px; }
 
-.mode-select { display:flex; gap:4px; }
-.mode-select .level-btn { padding:6px 8px; border-radius:4px; border:none; background:#eee; cursor:pointer; }
-.mode-select .level-btn.active { background:#bbb; font-weight:700; }
+/* Back and Pause buttons */
+.back-btn, .pause-btn {
+  padding:6px 12px; 
+  border-radius:6px; 
+  border:none; 
+  font-size:14px; 
+  cursor:pointer; 
+  background:#eee;
+  margin-top:4px; /* vertical spacing */
+}
 
-.top-buttons button { padding:6px 8px; border-radius:6px; border:none; background:#eee; cursor:pointer; font-size:16px; }
-
+/* Main board */
 main { background:transparent; padding:8px; }
 
-#boardWrap { background:#9e9e9e; padding:8px; border-radius:6px; box-shadow:inset 0 6px 0 rgba(0,0,0,0.15); }
+#boardWrap { 
+  background:#9e9e9e; 
+  padding:8px; 
+  border-radius:6px; 
+  box-shadow:inset 0 6px 0 rgba(0,0,0,0.15); 
+}
+
 #board { display:grid; gap:6px; touch-action:none; justify-content:center; }
 
 .cell {
@@ -105,22 +98,27 @@ main { background:transparent; padding:8px; }
 .cell.mine { background:#ffdddd; }
 .cell.hint { outline:4px solid rgba(255,200,0,0.9); }
 
+/* Overlays */
 .overlay { position:fixed; left:0; top:0; right:0; bottom:0; background:rgba(0,0,0,0.55); display:flex; align-items:center; justify-content:center; z-index:200; }
 .overlay.hidden { display:none; }
 .overlay .overlay-card { background:#f3f3f3; padding:18px; border-radius:8px; text-align:center; min-width:260px; }
 
+/* Footer */
 .credits { margin-top:8px; text-align:center; color:#222; font-weight:700; }
 
+/* Level selection grid */
 .level-grid { display:flex; gap:8px; flex-direction:column; }
 .level-grid .level-start { padding:12px; border-radius:8px; border:none; background:#e6e6e6; cursor:pointer; font-size:16px; }
 .level-grid .level-start small { display:block; font-size:12px; color:#444; margin-top:6px; }
 
-@media (max-width:420px) {
+/* Mobile responsiveness */
+@media (max-width:420px){
   .app { margin:0; }
   .cell { width:calc((100vw - 48px)/9); height:calc((100vw - 48px)/9); font-size:calc((100vw - 48px)/30); }
   #board { gap:4px; }
 
   .flag-btn, .hint-btn, .mines-counter, .timer {
-    width:40vw; font-size:calc(3vw + 10px);
+    width:36vw; font-size:calc(3vw + 10px);
   }
+  .back-btn, .pause-btn { font-size:calc(2.5vw + 10px); padding:5px 8px; }
 }
