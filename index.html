@@ -11,18 +11,19 @@
   <div class="app">
     <header class="bar">
       <div class="mines-counter" id="minesCounter">000</div>
-      <div class="controls">
-        <div class="mode-select" id="levelSelectDesktop">
-          <button data-level="beginner" class="level-btn active">Beginner</button>
-          <button data-level="intermediate" class="level-btn">Player</button>
-          <button data-level="expert" class="level-btn">Pro</button>
-        </div>
-        <div class="top-buttons">
-          <button id="flagToggle" title="Toggle flag mode">🚩</button>
-          <button id="hintBtn" title="Hint (shows 1 mine)">💡</button>
-          <button id="pauseBtn" title="Pause">⏸</button>
-        </div>
+
+      <!-- Back button next to mines counter -->
+      <button class="back-btn" id="backBtn" title="Back to level select">⬅ Back</button>
+
+      <!-- Centered Flag and Hint buttons -->
+      <div style="flex-grow:1; text-align:center;">
+        <button id="flagToggle" class="flag-btn" title="Toggle flag mode">🚩 Flag</button>
+        <button id="hintBtn" class="hint-btn" title="Hint (shows 1 mine)">💡 Hint</button>
       </div>
+
+      <!-- Pause button just before timer -->
+      <button id="pauseBtn" class="pause-btn" title="Pause">⏸ Pause</button>
+
       <div class="timer" id="timer">000</div>
     </header>
 
@@ -67,6 +68,15 @@
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(()=>console.log('SW reg failed'));
     }
+
+    // Example JS to toggle flag selected class
+    const flagBtn = document.getElementById('flagToggle');
+    let flagMode = false;
+    flagBtn.addEventListener('click', () => {
+      flagMode = !flagMode;
+      if(flagMode) flagBtn.classList.add('selected');
+      else flagBtn.classList.remove('selected');
+    });
   </script>
 </body>
 </html>
