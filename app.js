@@ -75,6 +75,14 @@ backBtn.addEventListener('click', ()=> {
 });
 
 document.addEventListener('contextmenu', e=> e.preventDefault()); // prevent right-click menu
+document.querySelectorAll('.overlay-close').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const overlay = btn.closest('.overlay');
+    overlay.classList.add('hidden');
+    // If closing pause overlay, resume game automatically
+    if(overlay.id === 'pauseOverlay') resumeGame();
+  });
+});
 
 // Level helper
 function selectLevel(lvl){
