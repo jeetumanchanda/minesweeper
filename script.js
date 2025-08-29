@@ -1,62 +1,63 @@
 const boardSize = 8;
 const mineCount = 10;
-
 let board = [];
 let gameOver = false;
 let timer = 0;
 let timerInterval;
 let flagMode = false;
+
 let flagsUsed = 0;
 
 const boardElement = document.getElementById('game-board');
 const resetButton = document.getElementById('reset');
-const timerElement = document.getElementById('timer');
 const flagButton = document.getElementById('flag-btn');
 const flagCountElement = document.getElementById('flag-count');
+const timerElement = document.getElementById('timer');
 
-// Toggle flag mode
+resetButton.addEventListener('click', init);
 flagButton.addEventListener('click', () => {
   flagMode = !flagMode;
   flagButton.textContent = `Flag Mode: ${flagMode ? 'On' : 'Off'}`;
 });
 
-// Initialize the game
 function init() {
   gameOver = false;
   timer = 0;
   timerElement.textContent = timer;
   clearInterval(timerInterval);
-  boardElement.innerHTML = '';
-  board = [];
+
+  flagsUsed = 0;
   flagMode = false;
   flagButton.textContent = 'Flag Mode: Off';
-  flagsUsed = 0;
   updateFlagCount();
 
-  // Initialize board
-  for (let i = 0; i < boardSize; i++) {
-    board[i] = [];
-    for (let j = 0; j < boardSize; j++) {
-      board[i][j] = { mine: false, revealed: false, flagged: false, count: 0 };
+  boardElement.innerHTML = '';
+  board = [];
+
+  // Create board
+  for (let r = 0; r < boardSize; r++) {
+    board[r] = [];
+    for (let c = 0; c < boardSize; c++) {
+      board[r][c] = {mine: false, revealed: false, flagged: false, count: 0};
     }
   }
 
   // Place mines
-  let minesPlaced = 0;
-  while (minesPlaced < mineCount) {
+  let placed = 0;
+  while (placed < mineCount) {
     const r = Math.floor(Math.random() * boardSize);
     const c = Math.floor(Math.random() * boardSize);
     if (!board[r][c].mine) {
       board[r][c].mine = true;
-      minesPlaced++;
+      placed++;
     }
   }
 
-  // Calculate counts
-  for (let i = 0; i < boardSize; i++) {
-    for (let j = 0; j < boardSize; j++) {
-      if (!board[i][j].mine) {
-        board[i][j].count = countAdjacentMines(i, j);
+  // Calculate adjacent mines
+  for (let r = 0; r < boardSize; r++) {
+    for (let c = 0; c < boardSize; c++) {
+      if (!board[r][c].mine) {
+        board[r][c].count = countMines(r, c);
       }
     }
   }
@@ -64,112 +65,107 @@ function init() {
   renderBoard();
 }
 
-function countAdjacentMines(x, y) {
+function countMines(r, c) {
   let count = 0;
-  for (let i = x - 1; i <= x + 1; i++) {
-    for (let j = y - 1; j <= y + 1; j++) {
-      if (i >= 0 && i < boardSize && j >= 0 && j < boardSize && board[i][j].mine) {
-        count++;
-      }
+  for (let i = r-1; i <= r+1; i++) {
+    for (let j = c-1; j <= c+1; j++) {
+      if (i >= 0 && i < boardSize && j >= 0 && j < boardSize && board[i][j].mine) count++;
     }
   }
   return count;
 }
 
 function renderBoard() {
-  boardElement.style.gridTemplateColumns = `repeat(${boardSize}, 30px)`;
+  boardElement.style.gridTemplateColumns = `repeat(${boardSize}, 40px)`;
   boardElement.innerHTML = '';
 
-  for (let i = 0; i < boardSize; i++) {
-    for (let j = 0; j < boardSize; j++) {
-      const cell = document.createElement('div');
-      cell.classList.add('cell');
-      if (board[i][j].revealed) cell.classList.add('revealed');
-      if (board[i][j].flagged) cell.classList.add('flag');
-      if (board[i][j].revealed && board[i][j].mine) cell.classList.add('mine');
+  for (let r = 0; r < boardSize; r++) {
+    for (let c = 0; c < boardSize; c++) {
+      const cellEl = document.createElement('div');
+      cellEl.className = 'cell';
+      const cell = board[r][c];
 
-      cell.addEventListener('click', () => {
-        if (flagMode) {
-          toggleFlag(i, j);
-        } else {
-          revealCell(i, j);
-        }
+      if (cell.revealed) cellEl.classList.add('revealed');
+      if (cell.flagged) cellEl.classList.add('flag');
+      if (cell.revealed && cell.mine) cellEl.classList.add('mine');
+
+      if (cell.revealed && !cell.mine && cell.count > 0) cellEl.textContent = cell.count;
+
+      cellEl.addEventListener('click', () => {
+        if (gameOver) return;
+        if (flagMode) toggleFlag(r,c); else reveal(r,c);
       });
 
-      cell.addEventListener('contextmenu', (e) => {
+      cellEl.addEventListener('contextmenu', (e) => {
         e.preventDefault();
-        toggleFlag(i, j);
+        if (gameOver) return;
+        toggleFlag(r,c);
       });
 
-      if (board[i][j].revealed && !board[i][j].mine && board[i][j].count > 0) {
-        cell.textContent = board[i][j].count;
-      }
-
-      boardElement.appendChild(cell);
+      boardElement.appendChild(cellEl);
     }
   }
 }
 
-function revealCell(x, y) {
-  if (gameOver || board[x][y].revealed || board[x][y].flagged) return;
+function reveal(r,c) {
+  const cell = board[r][c];
+  if (cell.revealed || cell.flagged) return;
 
-  board[x][y].revealed = true;
+  cell.revealed = true;
+  if (!timerInterval) startTimer();
 
-  if (board[x][y].mine) {
-    alert('Game Over!');
+  if (cell.mine) {
     gameOver = true;
     clearInterval(timerInterval);
+    alert("Game Over!");
     revealAllMines();
-  } else if (board[x][y].count === 0) {
-    for (let i = x - 1; i <= x + 1; i++) {
-      for (let j = y - 1; j <= y + 1; j++) {
-        if (i >= 0 && i < boardSize && j >= 0 && j < boardSize) {
-          revealCell(i, j);
-        }
+    return;
+  }
+
+  if (cell.count === 0) {
+    for (let i = r-1; i <= r+1; i++) {
+      for (let j = c-1; j <= c+1; j++) {
+        if (i >=0 && i < boardSize && j >=0 && j < boardSize) reveal(i,j);
       }
     }
   }
 
   renderBoard();
-  if (!gameOver) startTimer();
 }
 
-function toggleFlag(x, y) {
-  if (gameOver || board[x][y].revealed) return;
-
-  board[x][y].flagged = !board[x][y].flagged;
+function toggleFlag(r,c) {
+  const cell = board[r][c];
+  if (cell.revealed) return;
+  cell.flagged = !cell.flagged;
   updateFlagCount();
   renderBoard();
 }
 
 function updateFlagCount() {
   flagsUsed = 0;
-  for (let i = 0; i < boardSize; i++) {
-    for (let j = 0; j < boardSize; j++) {
-      if (board[i][j].flagged) flagsUsed++;
+  for (let r = 0; r < boardSize; r++) {
+    for (let c = 0; c < boardSize; c++) {
+      if (board[r][c].flagged) flagsUsed++;
     }
   }
   flagCountElement.textContent = `Flags: ${flagsUsed} / ${mineCount}`;
 }
 
 function revealAllMines() {
-  for (let i = 0; i < boardSize; i++) {
-    for (let j = 0; j < boardSize; j++) {
-      if (board[i][j].mine) board[i][j].revealed = true;
+  for (let r = 0; r < boardSize; r++) {
+    for (let c = 0; c < boardSize; c++) {
+      if (board[r][c].mine) board[r][c].revealed = true;
     }
   }
   renderBoard();
 }
 
 function startTimer() {
-  if (!timerInterval) {
-    timerInterval = setInterval(() => {
-      timer++;
-      timerElement.textContent = timer;
-    }, 1000);
-  }
+  timerInterval = setInterval(() => {
+    timer++;
+    timerElement.textContent = timer;
+  }, 1000);
 }
 
-resetButton.addEventListener('click', init);
-
+// Initialize the game
 init();
