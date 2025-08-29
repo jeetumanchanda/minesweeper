@@ -50,3 +50,9 @@ h1 {
 .cell.flag {
   background: yellow;
 }
+
+footer {
+  margin-top: 20px;
+  font-weight: bold;
+  color: #555;
+}
