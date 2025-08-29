@@ -175,7 +175,7 @@ main {
 
 .overlay-close {
   position: absolute;
-  top: 6px;
+  top: 8px;
   right: 10px;
   background: transparent;
   border: none;
