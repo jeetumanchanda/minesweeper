@@ -12,13 +12,14 @@
   <h1>Minesweeper</h1>
   <div class="controls">
     <button id="reset">Reset</button>
+    <button id="flag-btn">Flag Mode: Off</button>
+    <span id="flag-count">Flags: 0 / 10</span>
     <span id="timer">0</span>s
   </div>
   <div id="game-board"></div>
 
   <script src="script.js"></script>
   <script>
-    // Service worker registration
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/service-worker.js')
@@ -27,5 +28,8 @@
       });
     }
   </script>
+    <footer>
+    APP-BY-JEET
+  </footer>
 </body>
 </html>
