@@ -159,8 +159,9 @@ main {
 }
 
 .overlay .overlay-card {
+  position: relative;
   background: #f3f3f3;
-  padding: 18px;
+  padding:24px 18px 18px 18px;
   border-radius: 8px;
   text-align: center;
   min-width: 260px;
@@ -175,16 +176,22 @@ main {
 
 .overlay-close {
   position: absolute;
-  top: 8px;
-  right: 10px;
-  background: transparent;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #333;
-  font-weight: bold;
-  line-height: 1;
-  transition: color 0.2s;
+  top: -12px; /* slightly above overlay top */
+  right: -12px; /* slightly outside right edge */
+  width:40px;
+  height:40px;
+  background:#ff5555;
+  color:#fff;
+  border-radius:50%;
+  border:none;
+  font-size:24px;
+  font-weight:bold;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 2px 6px rgba(0,0,0,0.3);
+  transition:0.2s;
 }
 
 .overlay-close:hover {
