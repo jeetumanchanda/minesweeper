@@ -10,22 +10,22 @@
 <body>
   <div class="app">
     <header class="bar">
-      <!-- Left column: Mine counter + Back -->
-      <div style="display:flex; flex-direction:column; align-items:flex-start;">
+      <!-- Left: Mines + Back -->
+      <div class="bar-column">
         <div class="mines-counter" id="minesCounter">000</div>
-        <button class="back-btn" id="backBtn" title="Back to level select">⬅ Back</button>
+        <button class="back-btn" id="backBtn">⬅ Back</button>
       </div>
 
-      <!-- Center column: Flag and Hint buttons -->
-      <div style="flex-grow:1; text-align:center;">
-        <button id="flagToggle" class="flag-btn" title="Toggle flag mode">🚩 Flag</button>
-        <button id="hintBtn" class="hint-btn" title="Hint (shows 1 mine)">💡 Hint</button>
+      <!-- Center: Flag + Hint -->
+      <div class="bar-column">
+        <button id="flagToggle" class="flag-btn">🚩 Flag</button>
+        <button id="hintBtn" class="hint-btn">💡 Hint</button>
       </div>
 
-      <!-- Right column: Timer + Pause -->
-      <div style="display:flex; flex-direction:column; align-items:flex-end;">
+      <!-- Right: Timer + Pause -->
+      <div class="bar-column">
         <div class="timer" id="timer">000</div>
-        <button id="pauseBtn" class="pause-btn" title="Pause">⏸ Pause</button>
+        <button id="pauseBtn" class="pause-btn">⏸ Pause</button>
       </div>
     </header>
 
@@ -35,7 +35,7 @@
       </div>
     </main>
 
-    <!-- Overlays -->
+    <!-- Level Overlay -->
     <div id="levelOverlay" class="overlay">
       <div class="overlay-card">
         <h2>Select Level</h2>
@@ -47,6 +47,7 @@
       </div>
     </div>
 
+    <!-- Pause Overlay -->
     <div id="pauseOverlay" class="overlay hidden">
       <div class="overlay-card">
         <h2>Paused</h2>
@@ -54,6 +55,7 @@
       </div>
     </div>
 
+    <!-- Win/Lose Overlay -->
     <div id="winOverlay" class="overlay hidden">
       <div class="overlay-card">
         <h2 id="winMsg">You solved it!</h2>
@@ -70,15 +72,6 @@
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(()=>console.log('SW reg failed'));
     }
-
-    // Flag toggle JS
-    const flagBtn = document.getElementById('flagToggle');
-    let flagMode = false;
-    flagBtn.addEventListener('click', () => {
-      flagMode = !flagMode;
-      if(flagMode) flagBtn.classList.add('selected');
-      else flagBtn.classList.remove('selected');
-    });
   </script>
 </body>
 </html>
