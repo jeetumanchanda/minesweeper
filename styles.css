@@ -2,7 +2,7 @@ body {
   font-family: sans-serif;
   background: #c0c0c0;
   margin: 0;
-  padding: 0;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,91 +14,75 @@ body {
   align-items: center;
   width: 100%;
   max-width: 400px;
-  margin: 5px;
+  margin-bottom: 10px;
 }
 
 .counter {
   background: black;
   color: red;
-  font-family: 'Digital', monospace;
-  font-size: 1.5em;
+  font-family: 'Courier New', monospace;
+  font-size: 24px;
   padding: 5px 10px;
+  border: inset 2px #fff;
+  width: 60px;
   text-align: center;
-  min-width: 60px;
-  border: inset 2px #808080;
 }
 
-.control-btn {
-  background: #e0e0e0;
-  border: outset 2px #fff;
+#pause-btn, #back-btn {
+  font-size: 18px;
   padding: 5px 10px;
-  margin: 0 2px;
-  font-weight: bold;
+  margin: 0 5px;
+  border: outset 2px #fff;
+  background: #e0e0e0;
 }
 
-.control-btn:active {
-  border: inset 2px #808080;
-}
-
-#controls {
+#center-controls {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 10px 0;
+  margin-bottom: 10px;
+  width: 100%;
+  max-width: 400px;
 }
 
-.wide-btn {
-  background: #e0e0e0;
-  border: outset 2px #fff;
-  padding: 10px;
-  width: 200px;
+#flag-btn, #hint-btn {
+  font-size: 18px;
+  width: 100%;
+  max-width: 250px;
   margin: 5px 0;
-  font-weight: bold;
+  padding: 10px;
+  border: outset 2px #fff;
+  background: #e0e0e0;
 }
 
-.wide-btn:active, .wide-btn.active {
-  border: inset 2px #808080;
+#flag-btn.active {
+  border: inset 2px #fff;
   background: #d0d0d0;
 }
 
-#game-board {
+#board {
   display: grid;
-  margin: 10px;
-  border: outset 3px #fff;
+  grid-template-columns: repeat(9, 32px);
+  grid-template-rows: repeat(9, 32px);
+  gap: 2px;
+  border: inset 3px #fff;
+  background: #808080;
 }
 
 .tile {
-  width: 24px;
-  height: 24px;
-  background: #bdbdbd;
+  width: 32px;
+  height: 32px;
+  background: #c0c0c0;
   border: outset 2px #fff;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   font-weight: bold;
-  font-size: 14px;
+  cursor: pointer;
 }
 
 .tile.revealed {
-  border: inset 2px #808080;
-  background: #c0c0c0;
-}
-
-.overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(192,192,192,0.95);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-}
-
-.overlay.hidden { display: none; }
-
-.overlay-content {
-  background: #c0c0c0;
-  border: outset 3px #fff;
-  padding: 20px;
-  text-align: center;
+  background: #e0e0e0;
+  border: inset 2px #fff;
+  cursor: default;
 }
