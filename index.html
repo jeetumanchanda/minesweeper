@@ -10,21 +10,23 @@
 <body>
   <div class="app">
     <header class="bar">
-      <div class="mines-counter" id="minesCounter">000</div>
+      <!-- Left column: Mine counter + Back -->
+      <div style="display:flex; flex-direction:column; align-items:flex-start;">
+        <div class="mines-counter" id="minesCounter">000</div>
+        <button class="back-btn" id="backBtn" title="Back to level select">⬅ Back</button>
+      </div>
 
-      <!-- Back button next to mines counter -->
-      <button class="back-btn" id="backBtn" title="Back to level select">⬅ Back</button>
-
-      <!-- Centered Flag and Hint buttons -->
+      <!-- Center column: Flag and Hint buttons -->
       <div style="flex-grow:1; text-align:center;">
         <button id="flagToggle" class="flag-btn" title="Toggle flag mode">🚩 Flag</button>
         <button id="hintBtn" class="hint-btn" title="Hint (shows 1 mine)">💡 Hint</button>
       </div>
 
-      <!-- Pause button just before timer -->
-      <button id="pauseBtn" class="pause-btn" title="Pause">⏸ Pause</button>
-
-      <div class="timer" id="timer">000</div>
+      <!-- Right column: Timer + Pause -->
+      <div style="display:flex; flex-direction:column; align-items:flex-end;">
+        <div class="timer" id="timer">000</div>
+        <button id="pauseBtn" class="pause-btn" title="Pause">⏸ Pause</button>
+      </div>
     </header>
 
     <main>
@@ -69,7 +71,7 @@
       navigator.serviceWorker.register('sw.js').catch(()=>console.log('SW reg failed'));
     }
 
-    // Example JS to toggle flag selected class
+    // Flag toggle JS
     const flagBtn = document.getElementById('flagToggle');
     let flagMode = false;
     flagBtn.addEventListener('click', () => {
