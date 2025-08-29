@@ -1,32 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Minesweeper</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="manifest" href="manifest.json" />
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon-192.png">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="top-bar">
-    <div id="mine-counter" class="counter">010</div>
-    <button id="pause-btn">⏸</button>
-    <div id="timer" class="counter">000</div>
-    <button id="back-btn">↩</button>
+  <h1>Minesweeper</h1>
+  <div class="controls">
+    <button id="reset">Reset</button>
+    <span id="timer">0</span>s
   </div>
-
-  <div id="center-controls">
-    <button id="flag-btn" class="toggle">🚩 Flag</button>
-    <button id="hint-btn">💡 Hint</button>
-  </div>
-
-  <div id="board"></div>
+  <div id="game-board"></div>
 
   <script src="script.js"></script>
   <script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js");
-}
-</script>
+    // Service worker registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(() => console.log('Service Worker registered'))
+          .catch((error) => console.log('Service Worker registration failed:', error));
+      });
+    }
+  </script>
 </body>
 </html>
