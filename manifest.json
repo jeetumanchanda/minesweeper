@@ -1,20 +1,12 @@
 {
-  "name": "Classic Minesweeper PWA",
-  "short_name": "Mines",
+  "name": "Classic Minesweeper",
+  "short_name": "Minesweeper",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#bfbfbf",
-  "theme_color": "#bfbfbf",
+  "background_color": "#c0c0c0",
+  "theme_color": "#c0c0c0",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
   ]
 }

@@ -1,72 +1,44 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Classic Minesweeper PWA</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Classic Minesweeper</title>
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="app">
-    <header class="bar">
-      <div class="mines-counter" id="minesCounter">000</div>
-      <div class="controls">
-        <div class="mode-select" id="levelSelectDesktop">
-          <button data-level="beginner" class="level-btn active">Beginner</button>
-          <button data-level="intermediate" class="level-btn">Player</button>
-          <button data-level="expert" class="level-btn">Pro</button>
-        </div>
-        <div class="top-buttons">
-          <button id="flagToggle" title="Toggle flag mode">🚩</button>
-          <button id="hintBtn" title="Hint (shows 1 mine)">💡</button>
-          <button id="pauseBtn" title="Pause">⏸</button>
-        </div>
-      </div>
-      <div class="timer" id="timer">000</div>
-    </header>
+  <div id="top-bar">
+    <button id="back-btn" class="control-btn">⟲</button>
+    <div id="mine-counter" class="counter">010</div>
+    <div id="pause-btn" class="control-btn">II</div>
+    <div id="timer" class="counter">000</div>
+  </div>
 
-    <main>
-      <div id="boardWrap">
-        <div id="board" aria-hidden="false"></div>
-      </div>
-    </main>
+  <div id="controls">
+    <button id="flag-btn" class="wide-btn">🚩 Flag</button>
+    <button id="hint-btn" class="wide-btn">💡 Hint</button>
+  </div>
 
-    <!-- Overlays -->
-    <div id="levelOverlay" class="overlay">
-      <div class="overlay-card">
-        <h2>Select Level</h2>
-        <div class="level-grid">
-          <button class="level-start" data-level="beginner">Beginner<br><small>9×9, 10 mines</small></button>
-          <button class="level-start" data-level="intermediate">Player<br><small>16×16, 40 mines</small></button>
-          <button class="level-start" data-level="expert">Pro<br><small>16×30, 99 mines</small></button>
-        </div>
-      </div>
+  <div id="game-board"></div>
+
+  <!-- Overlays -->
+  <div id="overlay" class="overlay hidden">
+    <div class="overlay-content">
+      <p id="overlay-text"></p>
+      <button id="overlay-btn" class="wide-btn">Play</button>
     </div>
+  </div>
 
-    <div id="pauseOverlay" class="overlay hidden">
-      <div class="overlay-card">
-        <h2>Paused</h2>
-        <button id="resumeBtn">Resume ▶</button>
-      </div>
+  <div id="level-select" class="overlay">
+    <div class="overlay-content">
+      <p>Choose Difficulty</p>
+      <button class="wide-btn level-btn" data-level="beginner">Beginner</button>
+      <button class="wide-btn level-btn" data-level="player">Player</button>
+      <button class="wide-btn level-btn" data-level="pro">Pro</button>
     </div>
-
-    <div id="winOverlay" class="overlay hidden">
-      <div class="overlay-card">
-        <h2 id="winMsg">You solved it!</h2>
-        <p id="winTime">Time taken to solve 0:00</p>
-        <button id="newGameBtn">New Game</button>
-      </div>
-    </div>
-
-    <footer class="credits">APP-BY-JEET</footer>
   </div>
 
   <script src="app.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').catch(()=>console.log('SW reg failed'));
-    }
-  </script>
 </body>
 </html>
