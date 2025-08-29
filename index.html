@@ -1,44 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Classic Minesweeper</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minesweeper</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
 </head>
 <body>
   <div id="top-bar">
-    <button id="back-btn" class="control-btn">⟲</button>
     <div id="mine-counter" class="counter">010</div>
-    <div id="pause-btn" class="control-btn">II</div>
+    <button id="pause-btn">⏸</button>
     <div id="timer" class="counter">000</div>
+    <button id="back-btn">↩</button>
   </div>
 
-  <div id="controls">
-    <button id="flag-btn" class="wide-btn">🚩 Flag</button>
-    <button id="hint-btn" class="wide-btn">💡 Hint</button>
+  <div id="center-controls">
+    <button id="flag-btn" class="toggle">🚩 Flag</button>
+    <button id="hint-btn">💡 Hint</button>
   </div>
 
-  <div id="game-board"></div>
+  <div id="board"></div>
 
-  <!-- Overlays -->
-  <div id="overlay" class="overlay hidden">
-    <div class="overlay-content">
-      <p id="overlay-text"></p>
-      <button id="overlay-btn" class="wide-btn">Play</button>
-    </div>
-  </div>
-
-  <div id="level-select" class="overlay">
-    <div class="overlay-content">
-      <p>Choose Difficulty</p>
-      <button class="wide-btn level-btn" data-level="beginner">Beginner</button>
-      <button class="wide-btn level-btn" data-level="player">Player</button>
-      <button class="wide-btn level-btn" data-level="pro">Pro</button>
-    </div>
-  </div>
-
-  <script src="app.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
