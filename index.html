@@ -1,38 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minesweeper</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="icon-192.png">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minesweeper</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Minesweeper</h1>
-  <div class="controls">
-    <button id="reset">Reset</button>
-    <button id="flag-btn">Flag Mode: Off</button>
-    <span id="flag-count">Flags: 0 / 10</span>
-    <span id="timer">0</span>s
-  </div>
+<h1>Minesweeper</h1>
+<div class="controls">
+  <button id="reset">Reset</button>
+  <button id="flag-btn">Flag Mode: Off</button>
+  <span id="flag-count">Flags: 0 / 10</span>
+  <span id="timer">0</span>s
+</div>
 
-  <div id="game-board"></div>
+<div id="game-board"></div>
 
-  <footer>
-    APP-BY-JEET
-  </footer>
+<footer>APP-BY-JEET</footer>
 
-  <script src="script.js"></script>
-  <script>
-    // Service worker registration
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-          .then(() => console.log('Service Worker registered'))
-          .catch((error) => console.log('Service Worker registration failed:', error));
-      });
-    }
-  </script>
+<script src="script.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(() => console.log('Service Worker registered'))
+      .catch((err) => console.log('Service Worker registration failed:', err));
+  });
+}
+</script>
 </body>
 </html>
