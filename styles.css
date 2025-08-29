@@ -1,61 +1,232 @@
-*{box-sizing:border-box;font-family:Arial, Helvetica, sans-serif}
-:root{
-  --bg:#bfbfbf; 
-  --tile:#cfcfcf; 
-  --tile-dark:#9d9d9d; 
-  --accent:#2b6eff;
+* {
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
 }
-html,body{height:100%;margin:0;background:var(--bg);}
-.app{max-width:540px;margin:8px auto;padding:8px;border-radius:6px}
 
-/* Top Bar */
-.bar{
-  display:flex; justify-content:space-between; align-items:flex-start;
-  padding:6px 8px; background:#d0d0d0; border-radius:6px;
+:root {
+  --bg: #bfbfbf;
+  --tile: #cfcfcf;
+  --tile-dark: #9d9d9d;
+  --accent: #2b6eff;
 }
-.bar-column{display:flex; flex-direction:column; align-items:center;}
 
-/* Left: Mines + Back */
-.mines-counter{width:80px;text-align:center;font-family:monospace;background:#111;color:#ff6666;font-weight:700;font-size:16px;padding:6px 0;border-radius:6px;}
-.back-btn{width:80px;font-size:14px;margin-top:4px;padding:6px 0;border:none;border-radius:6px;background:#eee;cursor:pointer;}
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+}
 
-/* Center: Flag + Hint */
-.flag-btn, .hint-btn{width:100px;padding:8px 0;margin:4px auto;border-radius:8px;border:none;background:#eee;font-size:16px;font-weight:700;cursor:pointer;transition:0.2s;}
-.flag-btn.selected{background: var(--accent); color:#fff; box-shadow: inset 0 0 4px rgba(0,0,0,0.3);}
-.hint-btn{margin-top:4px;}
+.app {
+  max-width: 540px;
+  margin: 8px auto;
+  padding: 8px;
+  border-radius: 6px;
+}
 
-/* Right: Timer + Pause */
-.timer{width:80px;text-align:center;font-family:monospace;background:#111;color:#ff6666;font-weight:700;font-size:16px;padding:6px 0;border-radius:6px;}
-.pause-btn{width:80px;font-size:14px;margin-top:4px;padding:6px 0;border:none;border-radius:6px;background:#eee;cursor:pointer;}
+.bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 6px 8px;
+  background: #d0d0d0;
+  border-radius: 6px;
+}
+
+/* Mines counter and timer */
+.mines-counter,
+.timer {
+  font-family: monospace;
+  background: #111;
+  color: #ff6666;
+  font-weight: 700;
+  text-align: center;
+  padding: 6px 8px;
+  border-radius: 4px;
+  width: 60px;
+}
+
+/* Buttons layout */
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+#flagToggle,
+#hintBtn,
+#backBtn,
+#pauseBtn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  background: #eee;
+  cursor: pointer;
+  font-size: 20px;
+  width: 60px;
+  transition: background 0.2s, transform 0.1s;
+}
+
+/* Flag button selected differentiator */
+#flagToggle.selected {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+}
+
+/* Back and Pause buttons */
+#backBtn,
+#pauseBtn {
+  font-size: 18px;
+}
+
+/* Hint button */
+#hintBtn {
+  font-size: 18px;
+}
 
 /* Main board */
-main{padding-top:12px;background:transparent;}
-#boardWrap{background:#9e9e9e;padding:8px;border-radius:6px;box-shadow:inset 0 6px 0 rgba(0,0,0,0.15);}
-#board{display:grid;gap:6px;touch-action:none;justify-content:center;}
-.cell{width:36px;height:36px;background:linear-gradient(145deg,#d6d6d6,#bdbdbd);border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:700;cursor:pointer;user-select:none;
-  box-shadow: 4px 4px 0 rgba(0,0,0,0.15), -4px -4px 0 rgba(255,255,255,0.6); font-family:monospace; font-size:16px;}
-.cell.revealed{background:linear-gradient(145deg,#eee,#ccc);cursor:default;box-shadow:none;}
-.cell.flagged{background:#ffe6e6;color:#b30000;}
-.cell.mine{background:#ffdddd;}
-.cell.hint{outline:4px solid rgba(255,200,0,0.9);}
+main {
+  background: transparent;
+  padding: 8px;
+}
+
+#boardWrap {
+  background: #9e9e9e;
+  padding: 8px;
+  border-radius: 6px;
+  box-shadow: inset 0 6px 0 rgba(0,0,0,0.15);
+}
+
+#board {
+  display: grid;
+  gap: 6px;
+  touch-action: none;
+  justify-content: center;
+}
+
+.cell {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(145deg,#d6d6d6,#bdbdbd);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.15), -4px -4px 0 rgba(255,255,255,0.6);
+  font-family: monospace;
+  font-size: 16px;
+}
+
+.cell.revealed {
+  background: linear-gradient(145deg,#eee,#ccc);
+  cursor: default;
+  box-shadow: none;
+}
+
+.cell.flagged {
+  background: #ffe6e6;
+  color: #b30000;
+}
+
+.cell.mine {
+  background: #ffdddd;
+}
+
+.cell.hint {
+  outline: 4px solid rgba(255,200,0,0.9);
+}
 
 /* Overlays */
-.overlay{position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:500;}
-.overlay.hidden{display:none;}
-.overlay .overlay-card{background:#f3f3f3;padding:18px;border-radius:8px;text-align:center;min-width:260px;}
+.overlay {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.overlay.hidden {
+  display: none;
+}
+
+.overlay .overlay-card {
+  background: #f3f3f3;
+  padding: 18px;
+  border-radius: 8px;
+  text-align: center;
+  min-width: 260px;
+}
+
+.overlay .overlay-card button {
+  padding: 14px 28px;
+  font-size: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
 
 /* Footer */
-.credits{margin-top:8px;text-align:center;color:#222;font-weight:700;}
+.credits {
+  margin-top: 8px;
+  text-align: center;
+  color: #222;
+  font-weight: 700;
+}
 
-/* Level selection */
-.level-grid{display:flex;gap:8px;flex-direction:column;}
-.level-grid .level-start{padding:12px;border-radius:8px;border:none;background:#e6e6e6;cursor:pointer;font-size:16px;}
-.level-grid .level-start small{display:block;font-size:12px;color:#444;margin-top:6px;}
+/* Level grid */
+.level-grid {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+}
 
-/* Mobile responsiveness */
+.level-grid .level-start {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #e6e6e6;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.level-grid .level-start small {
+  display: block;
+  font-size: 12px;
+  color: #444;
+  margin-top: 6px;
+}
+
+/* Responsive adjustments */
 @media (max-width:420px){
-  .app{margin:0;}
-  .cell{width:calc((100vw - 48px)/9);height:calc((100vw - 48px)/9);font-size:calc((100vw - 48px)/30);}
-  #board{gap:4px;}
-  .flag-btn,.hint-btn,.mines-counter,.timer,.back-btn,.pause-btn{width:32vw;font-size:calc(3vw + 10px);}
+  .app {
+    margin: 0;
+  }
+  .cell {
+    width: calc((100vw - 48px)/9);
+    height: calc((100vw - 48px)/9);
+    font-size: calc((100vw - 48px)/30);
+  }
+  #board {
+    gap: 4px;
+  }
+  #flagToggle,
+  #hintBtn,
+  #backBtn,
+  #pauseBtn {
+    width: 50px;
+    font-size: 18px;
+  }
+  #newGameBtn,
+  #resumeBtn {
+    width: 80%;
+    font-size: 18px;
+  }
 }
