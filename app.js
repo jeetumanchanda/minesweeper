@@ -20,6 +20,7 @@ const pauseBtn = document.getElementById('pauseBtn');
 const resumeBtn = document.getElementById('resumeBtn');
 const newGameBtn = document.getElementById('newGameBtn');
 const flagToggle = document.getElementById('flagToggle');
+const backBtn = document.getElementById('backBtn');
 
 let state = {
   level: 'beginner',
@@ -48,7 +49,16 @@ hintBtn.addEventListener('click', ()=> { if(!state.running || state.paused) retu
 pauseBtn.addEventListener('click', ()=> { if(!state.running) return; pauseGame(); });
 resumeBtn.addEventListener('click', ()=> resumeGame());
 newGameBtn.addEventListener('click', ()=> { startNewGame(); winOverlay.classList.add('hidden'); });
-flagToggle.addEventListener('click', ()=> { state.flagMode = !state.flagMode; flagToggle.style.opacity = state.flagMode ? '0.7' : '1'; });
+flagToggle.addEventListener('click', ()=> { 
+  state.flagMode = !state.flagMode; 
+  flagToggle.classList.toggle('selected', state.flagMode);
+});
+backBtn.addEventListener('click', ()=> {
+  if(state.running && !state.paused) pauseGame();
+  levelOverlay.classList.remove('hidden');
+  state.flagMode = false;
+  flagToggle.classList.remove('selected');
+});
 
 document.addEventListener('contextmenu', e=> e.preventDefault()); // prevent default right-click menu
 
@@ -152,7 +162,6 @@ function onPointerDown(e){
   const r = parseInt(el.dataset.r), c = parseInt(el.dataset.c);
   const cell = state.board[r][c];
   if(state.paused || !state.running) return;
-  // right click handled via contextmenu; left click as normal
   if(state.flagMode){ toggleFlag(cell); return; }
   reveal(cell);
 }
@@ -160,11 +169,9 @@ function onPointerDown(e){
 // reveal cell (with flood fill)
 function reveal(cell){
   if(cell.revealed || cell.flagged) return;
-  // if first move, ensure the clicked cell is not a mine (move mine if necessary)
   if(state.firstMove){
     state.firstMove = false;
     if(cell.isMine){
-      // move mine to a different random cell
       cell.isMine = false;
       let moved=false;
       for(let attempts=0; attempts<500 && !moved; attempts++){
@@ -180,7 +187,6 @@ function reveal(cell){
   cell.el.classList.add('revealed');
   state.revealedCount++;
   if(cell.isMine){
-    // reveal all mines and lose
     cell.el.classList.add('mine');
     revealAllMines();
     gameOver(false);
@@ -190,7 +196,6 @@ function reveal(cell){
       cell.el.textContent = cell.adj;
       cell.el.style.color = colorForNumber(cell.adj);
     } else {
-      // reveal neighbors (flood fill)
       for(let dr=-1;dr<=1;dr++) for(let dc=-1;dc<=1;dc++){
         const nr = cell.r + dr, nc = cell.c + dc;
         if(nr>=0 && nr<state.rows && nc>=0 && nc<state.cols){
@@ -203,7 +208,6 @@ function reveal(cell){
   checkWin();
 }
 
-// color helper for numbers
 function colorForNumber(n){
   switch(n){
     case 1: return '#0000cc';
@@ -218,7 +222,6 @@ function colorForNumber(n){
   }
 }
 
-// toggle flag
 function toggleFlag(cell){
   if(cell.revealed) return;
   cell.flagged = !cell.flagged;
@@ -233,7 +236,6 @@ function toggleFlag(cell){
   checkWin();
 }
 
-// reveal all mines
 function revealAllMines(){
   for(let r=0;r<state.rows;r++) for(let c=0;c<state.cols;c++){
     const cell = state.board[r][c];
@@ -245,21 +247,15 @@ function revealAllMines(){
   }
 }
 
-// check for win
 function checkWin(){
   const total = state.rows * state.cols;
-  if(state.revealedCount === total - state.mines){
-    gameOver(true);
-    return;
-  }
-  // additional win if all mines flagged correctly
+  if(state.revealedCount === total - state.mines){ gameOver(true); return; }
   let allMinesFlagged = true;
   for(let r=0;r<state.rows;r++) for(let c=0;c<state.cols;c++){
     const cell = state.board[r][c];
     if(cell.isMine && !cell.flagged) allMinesFlagged = false;
   }
   if(allMinesFlagged && state.flags === state.mines){
-    // reveal remaining safe tiles visually
     for(let r=0;r<state.rows;r++) for(let c=0;c<state.cols;c++){
       const cell = state.board[r][c];
       if(!cell.revealed && !cell.isMine){ reveal(cell); }
@@ -268,22 +264,30 @@ function checkWin(){
   }
 }
 
-// game over handler
 function gameOver(won){
   state.running = false;
   stopTimer();
-  if(won){
-    winMsg.textContent = 'You solved it!';
-  } else {
-    winMsg.textContent = 'Boom! You hit a mine.';
-  }
+  if(won){ winMsg.textContent = 'You solved it!'; }
+  else { winMsg.textContent = 'Boom! You hit a mine.'; }
   winTime.textContent = `Time taken to solve ${formatTime(state.timer)}`;
-  winOverlay.classList.remove('hidden');
+  winOverlay.classList.remove.hidden();
 }
 
 // timer control
-function startTimer(){ stopTimer(); state.timerInterval = setInterval(()=>{ state.timer++; updateTimerDisplay(); }, 1000); }
-function stopTimer(){ if(state.timerInterval) { clearInterval(state.timerInterval); state.timerInterval = null; } }
+function startTimer(){ 
+  stopTimer(); 
+  state.timerInterval = setInterval(()=>{ 
+    state.timer++; 
+    updateTimerDisplay(); 
+  }, 1000); 
+}
+
+function stopTimer(){ 
+  if(state.timerInterval){ 
+    clearInterval(state.timerInterval); 
+    state.timerInterval = null; 
+  } 
+}
 
 // pause/resume
 function pauseGame(){
@@ -291,9 +295,9 @@ function pauseGame(){
   state.paused = true;
   stopTimer();
   pauseOverlay.classList.remove('hidden');
-  // block interactions by setting pointer-events none on board
   boardEl.setAttribute('aria-hidden','true');
 }
+
 function resumeGame(){
   if(!state.running) return;
   state.paused = false;
@@ -316,10 +320,8 @@ function showHint(){
 
 // initial default start: show level overlay on load
 (function init(){
-  // default level 'beginner'
   selectLevel('beginner');
-  // show level overlay (user picks)
   levelOverlay.classList.remove('hidden');
-  // For accessibility, ensure timer and mines display reset
-  updateTimerDisplay(); updateMinesDisplay();
+  updateTimerDisplay(); 
+  updateMinesDisplay();
 })();
