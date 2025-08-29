@@ -1,128 +1,144 @@
-const rows = 9;
-const cols = 9;
-const minesCount = 10;
-
-const boardEl = document.getElementById("board");
-const mineCounterEl = document.getElementById("mine-counter");
-const timerEl = document.getElementById("timer");
-const flagBtn = document.getElementById("flag-btn");
+const boardSize = 8;
+const mineCount = 10;
 
 let board = [];
-let revealed = [];
-let flagged = [];
-let mines = [];
-let flagMode = false;
-let timer;
-let seconds = 0;
+let gameOver = false;
+let timer = 0;
+let timerInterval;
+
+const boardElement = document.getElementById('game-board');
+const resetButton = document.getElementById('reset');
+const timerElement = document.getElementById('timer');
 
 function init() {
-  board = Array(rows).fill().map(() => Array(cols).fill(0));
-  revealed = Array(rows).fill().map(() => Array(cols).fill(false));
-  flagged = Array(rows).fill().map(() => Array(cols).fill(false));
-  mines = [];
+  gameOver = false;
+  timer = 0;
+  timerElement.textContent = timer;
+  clearInterval(timerInterval);
+  boardElement.innerHTML = '';
+  board = [];
 
-  // place mines
-  while (mines.length < minesCount) {
-    const r = Math.floor(Math.random() * rows);
-    const c = Math.floor(Math.random() * cols);
-    if (!mines.some(m => m[0] === r && m[1] === c)) {
-      mines.push([r, c]);
-      board[r][c] = -1;
+  // Initialize board
+  for (let i = 0; i < boardSize; i++) {
+    board[i] = [];
+    for (let j = 0; j < boardSize; j++) {
+      board[i][j] = { mine: false, revealed: false, flagged: false, count: 0 };
     }
   }
 
-  // calculate numbers
-  mines.forEach(([r, c]) => {
-    for (let dr=-1; dr<=1; dr++) {
-      for (let dc=-1; dc<=1; dc++) {
-        const nr = r+dr, nc = c+dc;
-        if (nr>=0 && nr<rows && nc>=0 && nc<cols && board[nr][nc] !== -1) {
-          board[nr][nc]++;
+  // Place mines
+  let minesPlaced = 0;
+  while (minesPlaced < mineCount) {
+    const r = Math.floor(Math.random() * boardSize);
+    const c = Math.floor(Math.random() * boardSize);
+    if (!board[r][c].mine) {
+      board[r][c].mine = true;
+      minesPlaced++;
+    }
+  }
+
+  // Calculate counts
+  for (let i = 0; i < boardSize; i++) {
+    for (let j = 0; j < boardSize; j++) {
+      if (!board[i][j].mine) {
+        board[i][j].count = countAdjacentMines(i, j);
+      }
+    }
+  }
+
+  renderBoard();
+}
+
+function countAdjacentMines(x, y) {
+  let count = 0;
+  for (let i = x - 1; i <= x + 1; i++) {
+    for (let j = y - 1; j <= y + 1; j++) {
+      if (i >= 0 && i < boardSize && j >= 0 && j < boardSize && board[i][j].mine) {
+        count++;
+      }
+    }
+  }
+  return count;
+}
+
+function renderBoard() {
+  boardElement.style.gridTemplateColumns = `repeat(${boardSize}, 30px)`;
+  boardElement.innerHTML = '';
+
+  for (let i = 0; i < boardSize; i++) {
+    for (let j = 0; j < boardSize; j++) {
+      const cell = document.createElement('div');
+      cell.classList.add('cell');
+      if (board[i][j].revealed) cell.classList.add('revealed');
+      if (board[i][j].flagged) cell.classList.add('flag');
+      if (board[i][j].revealed && board[i][j].mine) cell.classList.add('mine');
+
+      cell.addEventListener('click', () => revealCell(i, j));
+      cell.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        toggleFlag(i, j);
+      });
+
+      if (board[i][j].revealed && !board[i][j].mine && board[i][j].count > 0) {
+        cell.textContent = board[i][j].count;
+      }
+
+      boardElement.appendChild(cell);
+    }
+  }
+}
+
+function revealCell(x, y) {
+  if (gameOver || board[x][y].revealed || board[x][y].flagged) return;
+
+  board[x][y].revealed = true;
+
+  if (board[x][y].mine) {
+    alert('Game Over!');
+    gameOver = true;
+    clearInterval(timerInterval);
+    revealAllMines();
+  } else if (board[x][y].count === 0) {
+    // Reveal neighbors
+    for (let i = x - 1; i <= x + 1; i++) {
+      for (let j = y - 1; j <= y + 1; j++) {
+        if (i >= 0 && i < boardSize && j >= 0 && j < boardSize) {
+          revealCell(i, j);
         }
       }
     }
-  });
+  }
 
-  // reset UI
-  boardEl.innerHTML = "";
-  boardEl.style.gridTemplateColumns = `repeat(${cols}, 32px)`;
-  boardEl.style.gridTemplateRows = `repeat(${rows}, 32px)`;
+  renderBoard();
+  if (!gameOver) startTimer();
+}
 
-  for (let r=0; r<rows; r++) {
-    for (let c=0; c<cols; c++) {
-      const tile = document.createElement("div");
-      tile.classList.add("tile");
-      tile.dataset.row = r;
-      tile.dataset.col = c;
-      tile.addEventListener("click", onTileClick);
-      boardEl.appendChild(tile);
+function toggleFlag(x, y) {
+  if (gameOver || board[x][y].revealed) return;
+  board[x][y].flagged = !board[x][y].flagged;
+  renderBoard();
+}
+
+function revealAllMines() {
+  for (let i = 0; i < boardSize; i++) {
+    for (let j = 0; j < boardSize; j++) {
+      if (board[i][j].mine) board[i][j].revealed = true;
     }
   }
-
-  mineCounterEl.textContent = minesCount.toString().padStart(3,"0");
-  seconds = 0;
-  timerEl.textContent = "000";
-  clearInterval(timer);
-  timer = setInterval(() => {
-    seconds++;
-    timerEl.textContent = seconds.toString().padStart(3,"0");
-  }, 1000);
+  renderBoard();
 }
 
-function onTileClick(e) {
-  const r = parseInt(e.target.dataset.row);
-  const c = parseInt(e.target.dataset.col);
-
-  if (flagMode) {
-    flagged[r][c] = !flagged[r][c];
-    e.target.textContent = flagged[r][c] ? "🚩" : "";
-    updateMineCounter();
-    return;
-  }
-
-  if (revealed[r][c] || flagged[r][c]) return;
-
-  reveal(r,c);
-}
-
-function reveal(r,c) {
-  if (r<0 || r>=rows || c<0 || c>=cols) return;
-  if (revealed[r][c] || flagged[r][c]) return;
-
-  const tile = getTile(r,c);
-  revealed[r][c] = true;
-  tile.classList.add("revealed");
-
-  if (board[r][c] === -1) {
-    tile.textContent = "💣";
-    clearInterval(timer);
-    return;
-  }
-
-  if (board[r][c] > 0) {
-    tile.textContent = board[r][c];
-  } else {
-    for (let dr=-1; dr<=1; dr++) {
-      for (let dc=-1; dc<=1; dc++) {
-        reveal(r+dr,c+dc);
-      }
-    }
+function startTimer() {
+  if (!timerInterval) {
+    timerInterval = setInterval(() => {
+      timer++;
+      timerElement.textContent = timer;
+    }, 1000);
   }
 }
 
-function updateMineCounter() {
-  const flagsPlaced = flagged.flat().filter(Boolean).length;
-  mineCounterEl.textContent = (minesCount - flagsPlaced).toString().padStart(3,"0");
-}
-
-function getTile(r,c) {
-  return boardEl.querySelector(`.tile[data-row='${r}'][data-col='${c}']`);
-}
-
-// flag mode toggle
-flagBtn.addEventListener("click", () => {
-  flagMode = !flagMode;
-  flagBtn.classList.toggle("active", flagMode);
+resetButton.addEventListener('click', () => {
+  init();
 });
 
 init();
