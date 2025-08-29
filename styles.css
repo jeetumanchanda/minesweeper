@@ -1,0 +1,35 @@
+*{box-sizing:border-box;font-family:Arial, Helvetica, sans-serif}
+:root{
+  --bg:#bfbfbf; --tile:#cfcfcf; --tile-dark:#9d9d9d; --accent:#2b6eff;
+}
+html,body{height:100%;margin:0;background:var(--bg);}
+.app{max-width:540px;margin:8px auto;padding:8px;border-radius:6px}
+.bar{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;background:#d0d0d0;border-radius:6px}
+.mines-counter,.timer{font-family:monospace;background:#111;padding:6px 10px;border-radius:4px;color:#ff6666;font-weight:700}
+.controls{display:flex;gap:8px;align-items:center}
+.mode-select{display:flex;gap:4px}
+.mode-select .level-btn{padding:6px 8px;border-radius:4px;border:none;background:#eee;cursor:pointer}
+.mode-select .level-btn.active{background:#bbb;font-weight:700}
+.top-buttons button{padding:6px 8px;border-radius:6px;border:none;background:#eee;cursor:pointer;font-size:16px}
+main{background:transparent;padding:8px}
+#boardWrap{background:#9e9e9e;padding:8px;border-radius:6px;box-shadow:inset 0 6px 0 rgba(0,0,0,0.15)}
+#board{display:grid;gap:6px;touch-action:none;justify-content:center}
+.cell{width:36px;height:36px;background:linear-gradient(145deg,#d6d6d6,#bdbdbd);border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:700;cursor:pointer;user-select:none;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.15), -4px -4px 0 rgba(255,255,255,0.6); font-family:monospace; font-size:16px;
+}
+.cell.revealed{background:linear-gradient(145deg,#eee,#ccc);cursor:default;box-shadow: none}
+.cell.flagged{background:#ffe6e6;color:#b30000}
+.cell.mine{background:#ffdddd}
+.cell.hint{outline:4px solid rgba(255,200,0,0.9);}
+.overlay{position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:200}
+.overlay.hidden{display:none}
+.overlay .overlay-card{background:#f3f3f3;padding:18px;border-radius:8px;text-align:center;min-width:260px}
+.credits{margin-top:8px;text-align:center;color:#222;font-weight:700}
+.level-grid{display:flex;gap:8px;flex-direction:column}
+.level-grid .level-start{padding:12px;border-radius:8px;border:none;background:#e6e6e6;cursor:pointer;font-size:16px}
+.level-grid .level-start small{display:block;font-size:12px;color:#444;margin-top:6px}
+@media (max-width:420px){
+  .app{margin:0}
+  .cell{width:calc((100vw - 48px)/9);height:calc((100vw - 48px)/9);font-size:calc((100vw - 48px)/30)}
+  #board{gap:4px}
+}
