@@ -173,6 +173,24 @@ main {
   cursor: pointer;
 }
 
+.overlay-close {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  font-weight: bold;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.overlay-close:hover {
+  color: #2b6eff;
+}
+
 /* Footer */
 .credits {
   margin-top: 8px;
