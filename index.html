@@ -10,22 +10,19 @@
 <body>
   <div class="app">
     <header class="bar">
-      <!-- Left: Mines + Back -->
-      <div class="bar-column">
+      <div style="display:flex; flex-direction:column; align-items:center;">
         <div class="mines-counter" id="minesCounter">000</div>
-        <button class="back-btn" id="backBtn">⬅ Back</button>
+        <button id="backBtn" title="Back to Level">⬅</button>
       </div>
 
-      <!-- Center: Flag + Hint -->
-      <div class="bar-column">
-        <button id="flagToggle" class="flag-btn">🚩 Flag</button>
-        <button id="hintBtn" class="hint-btn">💡 Hint</button>
+      <div class="controls">
+        <button id="flagToggle" title="Toggle flag mode">🚩</button>
+        <button id="hintBtn" title="Hint (shows 1 mine)">💡</button>
       </div>
 
-      <!-- Right: Timer + Pause -->
-      <div class="bar-column">
+      <div style="display:flex; flex-direction:column; align-items:center;">
         <div class="timer" id="timer">000</div>
-        <button id="pauseBtn" class="pause-btn">⏸ Pause</button>
+        <button id="pauseBtn" title="Pause">⏸</button>
       </div>
     </header>
 
@@ -35,7 +32,7 @@
       </div>
     </main>
 
-    <!-- Level Overlay -->
+    <!-- Level Selection Overlay -->
     <div id="levelOverlay" class="overlay">
       <div class="overlay-card">
         <h2>Select Level</h2>
@@ -55,7 +52,7 @@
       </div>
     </div>
 
-    <!-- Win/Lose Overlay -->
+    <!-- Win/Loss Overlay -->
     <div id="winOverlay" class="overlay hidden">
       <div class="overlay-card">
         <h2 id="winMsg">You solved it!</h2>
