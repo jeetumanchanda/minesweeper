@@ -35,6 +35,7 @@
     <!-- Level Selection Overlay -->
     <div id="levelOverlay" class="overlay">
       <div class="overlay-card">
+        <button class="overlay-close" title="Close">×</button>
         <h2>Select Level</h2>
         <div class="level-grid">
           <button class="level-start" data-level="beginner">Beginner<br><small>9×9, 10 mines</small></button>
@@ -47,6 +48,7 @@
     <!-- Pause Overlay -->
     <div id="pauseOverlay" class="overlay hidden">
       <div class="overlay-card">
+        <button class="overlay-close" title="Close">×</button>
         <h2>Paused</h2>
         <button id="resumeBtn">Resume ▶</button>
       </div>
@@ -55,6 +57,7 @@
     <!-- Win/Loss Overlay -->
     <div id="winOverlay" class="overlay hidden">
       <div class="overlay-card">
+        <button class="overlay-close" title="Close">×</button>
         <h2 id="winMsg">You solved it!</h2>
         <p id="winTime">Time taken to solve 0:00</p>
         <button id="newGameBtn">New Game</button>
@@ -69,6 +72,16 @@
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(()=>console.log('SW reg failed'));
     }
+
+    // Overlay close button functionality
+    document.querySelectorAll('.overlay-close').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const overlay = btn.closest('.overlay');
+        overlay.classList.add('hidden');
+        // Resume game if closing pause overlay
+        if(overlay.id === 'pauseOverlay' && window.resumeGame) resumeGame();
+      });
+    });
   </script>
 </body>
 </html>
