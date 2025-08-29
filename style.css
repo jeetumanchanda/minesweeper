@@ -14,6 +14,10 @@ h1 {
   margin-bottom: 10px;
 }
 
+.controls button, .controls span {
+  margin: 0 5px;
+}
+
 #game-board {
   display: grid;
   justify-content: center;
