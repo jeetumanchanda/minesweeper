@@ -5,11 +5,22 @@ let board = [];
 let gameOver = false;
 let timer = 0;
 let timerInterval;
+let flagMode = false;
+let flagsUsed = 0;
 
 const boardElement = document.getElementById('game-board');
 const resetButton = document.getElementById('reset');
 const timerElement = document.getElementById('timer');
+const flagButton = document.getElementById('flag-btn');
+const flagCountElement = document.getElementById('flag-count');
 
+// Toggle flag mode
+flagButton.addEventListener('click', () => {
+  flagMode = !flagMode;
+  flagButton.textContent = `Flag Mode: ${flagMode ? 'On' : 'Off'}`;
+});
+
+// Initialize the game
 function init() {
   gameOver = false;
   timer = 0;
@@ -17,6 +28,10 @@ function init() {
   clearInterval(timerInterval);
   boardElement.innerHTML = '';
   board = [];
+  flagMode = false;
+  flagButton.textContent = 'Flag Mode: Off';
+  flagsUsed = 0;
+  updateFlagCount();
 
   // Initialize board
   for (let i = 0; i < boardSize; i++) {
@@ -73,7 +88,14 @@ function renderBoard() {
       if (board[i][j].flagged) cell.classList.add('flag');
       if (board[i][j].revealed && board[i][j].mine) cell.classList.add('mine');
 
-      cell.addEventListener('click', () => revealCell(i, j));
+      cell.addEventListener('click', () => {
+        if (flagMode) {
+          toggleFlag(i, j);
+        } else {
+          revealCell(i, j);
+        }
+      });
+
       cell.addEventListener('contextmenu', (e) => {
         e.preventDefault();
         toggleFlag(i, j);
@@ -99,7 +121,6 @@ function revealCell(x, y) {
     clearInterval(timerInterval);
     revealAllMines();
   } else if (board[x][y].count === 0) {
-    // Reveal neighbors
     for (let i = x - 1; i <= x + 1; i++) {
       for (let j = y - 1; j <= y + 1; j++) {
         if (i >= 0 && i < boardSize && j >= 0 && j < boardSize) {
@@ -115,8 +136,20 @@ function revealCell(x, y) {
 
 function toggleFlag(x, y) {
   if (gameOver || board[x][y].revealed) return;
+
   board[x][y].flagged = !board[x][y].flagged;
+  updateFlagCount();
   renderBoard();
+}
+
+function updateFlagCount() {
+  flagsUsed = 0;
+  for (let i = 0; i < boardSize; i++) {
+    for (let j = 0; j < boardSize; j++) {
+      if (board[i][j].flagged) flagsUsed++;
+    }
+  }
+  flagCountElement.textContent = `Flags: ${flagsUsed} / ${mineCount}`;
 }
 
 function revealAllMines() {
@@ -137,8 +170,6 @@ function startTimer() {
   }
 }
 
-resetButton.addEventListener('click', () => {
-  init();
-});
+resetButton.addEventListener('click', init);
 
 init();
